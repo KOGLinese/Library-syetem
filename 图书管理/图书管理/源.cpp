@@ -1,22 +1,19 @@
 #include<iostream>
 #include<string>
 using namespace std;
-struct Libary {
+struct Library {
 	string id;
 	string book_name;
 	string author;
 	//int count;
-	struct Libary * next;
+	struct Library * next;
 };
-typedef struct Libary L;
+typedef struct Library L;
 
 
-void add(L * head)//添加书籍
+void add(L * head,string i,string bn,string au)//添加书籍
 {
 	L * p=new L;
-	string i, bn, au;
-	cout << "请依次输入书籍编号,书名,作者" << endl;
-	cin >> i >> bn >> au;
 	p->author = au;
 	p->book_name = bn;
 	p->id = i;
@@ -44,14 +41,14 @@ void print(L * head)//输出书库目录
 	L * p = head;
 	if (head->next == NULL)
 	{
-		cout << "无书籍" << endl;
+		cout << "	无书籍" <<endl<< endl;
 		return;
 	}
 	else
 	{
 		for (p = head->next; p != NULL; p = p->next)
 		{
-			cout <<"书籍编号："<< p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
+			cout <<"	书籍编号："<< p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
 		}
 	}
 	cout << endl;
@@ -68,7 +65,7 @@ int find_b(L * head,string kinds,string k)//查找书籍
 			if (p->id == kinds)
 			{
 			flag = 1;
-			cout << "书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
+			cout << "	书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
 			}
 		}
 		
@@ -77,7 +74,7 @@ int find_b(L * head,string kinds,string k)//查找书籍
 			if (p->book_name == kinds)
 			{
 				flag = 1;
-				cout << "书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
+				cout << "	书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
 			}
 		}
 		if (k == "au")
@@ -85,7 +82,7 @@ int find_b(L * head,string kinds,string k)//查找书籍
 			if (p->author == kinds)
 			{
 				flag = 1;
-				cout << "书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
+				cout << "	书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
 			}
 		}
 	}
@@ -115,7 +112,7 @@ void find_menu(L * head,string fk)//查找方式菜单
 	{
 		cin >> kinds;
 		flag = find_b(head, kinds,fk);
-		if (flag == 0) cout << "查无此书名" << endl;
+		if (flag == 0) cout << "查无此书" << endl;
 	}
 	if (fk == "au")
 	{
@@ -125,18 +122,54 @@ void find_menu(L * head,string fk)//查找方式菜单
 	}
 }
 
+void menu()
+{
+	cout << "=======================================" << endl;
+	cout << "||                                   ||" << endl;
+	cout << "||      欢迎使用图书管理系统         ||" << endl;
+	cout << "||      本系统含有以下几种功能：     ||" << endl;
+	cout << "||      1.输入1 进入添加书籍功能     ||" << endl;
+	cout << "||      2.输入2 进入查看书库模式     ||" << endl;
+	cout << "||      3.输入3 进入查找书籍模式     ||" << endl;
+	cout << "||      4.输入0 退出该系统           ||" << endl;
+	cout << "||      其他功能，敬请期待0.0        ||" << endl;
+	cout << "||                                   ||" << endl;
+	cout << "=======================================" << endl;
+}
+void end()
+{
+	cout << "=======================================" << endl;
+	cout << "||                                   ||" << endl;
+	cout << "||       感谢您对该系统的使用        ||" << endl;
+	cout << "||       欢迎下次再来                ||" << endl;
+	cout << "||                                   ||" << endl;
+	cout << "=======================================" << endl;
+}
 int main()
 {
 	L * head=new L;
 	head->next = NULL;
 	int type;
-	cout << "1:添加书籍, 2:查看目录, ,3:查找书籍, 0:退出程序" << endl;
+	menu();
 	while (1)
 	{
+		cout << "输入    1:添加书籍, 2:查看目录, ,3:查找书籍, 0:退出程序" << endl;
 		cin >> type;
 		if (type == 1)
 		{
-			add(head);
+			string idd, bn, au;
+			cout << "进入添加书籍模式，请依次输入书籍编号,书名,作者，输入quit返回菜单" << endl;
+			while (1)
+			{
+				cin >> idd;
+				if (idd == "quit")
+				{
+					cout << "退出添加书籍模式" << endl;
+					break;
+				}
+				cin >> bn >> au;
+				add(head,idd,bn,au);
+			}
 		}
 		else if (type == 2)
 		{
@@ -149,6 +182,7 @@ int main()
 			cout << "      bn 表示用书名查找书籍" << endl;
 			cout << "      au 表示用查找作者相关书籍" << endl;
 			cout << "      quit 表示退出查找" << endl;
+			cout << "输入时先表明是以何种方式 例如 输入 id 123  或者 bn HaliPoter" << endl;
 			while (1)
 			{
 				string fk;
@@ -169,6 +203,7 @@ int main()
 			continue;
 		}*/
 	}
+	end();
 	system("pause");
 	return 0;
 }
