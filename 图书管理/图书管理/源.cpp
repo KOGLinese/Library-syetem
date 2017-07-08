@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string>
+#include<fstream>
 using namespace std;
 struct Library {
 	string id;
@@ -9,8 +10,44 @@ struct Library {
 	struct Library * next;
 };
 typedef struct Library L;
-
-
+void init(L * head)
+{
+	L * p,* pre;
+	pre = head;
+	string s;
+	ifstream infile("e://Library//ALLBOOK.txt", ios::in);
+	while (!infile.eof())
+	{
+		p = new L;
+		getline(infile, s, '\n');
+		p->id = s;
+		getline(infile, s, '\n');
+		p->book_name = s;
+		getline(infile, s, '\n');
+		p->author = s;
+		p->next = NULL;
+		pre->next = p;
+		pre = pre->next;
+	}
+}
+void save(L *head)
+{
+	L * p = head;
+	ofstream outfile("e://Library//ALLBOOK.txt", ios::out);
+	p = head->next;
+	while (p != NULL)
+	{
+		if (p->id != "")
+		{
+		outfile << p->id << endl;
+		outfile << p->book_name << endl;
+		outfile << p->author;
+		if (p->next != NULL) outfile << endl;
+		}
+		
+		p = p->next;
+	}
+}
 void add(L * head,string i,string bn,string au)//添加书籍
 {
 	L * p=new L;
@@ -39,7 +76,7 @@ void print(L * head)//输出书库目录
 {
 	cout << "目录：" << endl;
 	L * p = head;
-	if (head->next == NULL)
+	if (head->next == NULL||head->next->id=="")
 	{
 		cout << "	无书籍" <<endl<< endl;
 		return;
@@ -121,7 +158,6 @@ void find_menu(L * head,string fk)//查找方式菜单
 		if (flag == 0) cout << "查无此作者" << endl;
 	}
 }
-
 void menu()
 {
 	cout << "=======================================" << endl;
@@ -150,6 +186,7 @@ int main()
 	L * head=new L;
 	head->next = NULL;
 	int type;
+	init(head);
 	menu();
 	while (1)
 	{
@@ -204,6 +241,7 @@ int main()
 		}*/
 	}
 	end();
+	save(head);
 	system("pause");
 	return 0;
 }
