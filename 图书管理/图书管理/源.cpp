@@ -33,7 +33,7 @@ void init(L * head)
 void save(L *head)
 {
 	L * p = head;
-	ofstream outfile("e://Library//ALLBOOK.txt", ios::out);
+	ofstream outfile("e://Library//ALLBOOK.txt", ios::app);
 	p = head->next;
 	while (p != NULL)
 	{
