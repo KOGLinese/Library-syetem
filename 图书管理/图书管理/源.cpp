@@ -2,25 +2,31 @@
 #include<string>
 #include<fstream>
 using namespace std;
-struct Library {
-	string id;
-	string book_name;
-	string author;
-	//int count;
+struct Library {		//书籍链表
+	string id;			//书籍编号
+	string book_name;	//书名
+	string author;		//作者
+	int count;			//数量
 	struct Library * next;
 };
 typedef struct Library L;
-void init(L * head)
+
+
+void init(L * head)  // 初始化链表
 {
 	L * p,* pre;
 	pre = head;
 	string s;
-	ifstream infile("e://Library//ALLBOOK.txt", ios::in);
-	while (!infile.eof())
+	char num;
+	ifstream infile("e://Library//ALLBOOK.txt", ios::in);//以读取的方式打开本地文件
+	while (!infile.eof())//本地数据存入链表
 	{
+
 		p = new L;
 		getline(infile, s, '\n');
 		p->id = s;
+		infile>>p->count ;
+		getline(infile, s, '\n');
 		getline(infile, s, '\n');
 		p->book_name = s;
 		getline(infile, s, '\n');
@@ -30,30 +36,53 @@ void init(L * head)
 		pre = pre->next;
 	}
 }
-void save(L *head)
+void save(L *head)  //数据存入本地文件
 {
 	L * p = head;
-	ofstream outfile("e://Library//ALLBOOK.txt", ios::app);
+	ofstream outfile("e://Library//ALLBOOK.txt", ios::out);//以写入的方式打开本地文件
 	p = head->next;
 	while (p != NULL)
 	{
 		if (p->id != "")
 		{
 		outfile << p->id << endl;
+		outfile << p->count << endl;
 		outfile << p->book_name << endl;
 		outfile << p->author;
+
 		if (p->next != NULL) outfile << endl;
 		}
-		
 		p = p->next;
 	}
 }
+
+bool find(L * head, string i, string bn, string au)//判断是否存在
+{
+	L * p = head;
+	if (head->next == NULL)
+	{
+		return false;
+	}
+	for (p = head->next; p != NULL; p = p->next)
+	{
+		if (p->id == i&&p->book_name == bn&&p->author == au)
+		{
+			p->count++;                  //若是已经存在则添加其数量
+			cout << "已添加书籍" << endl;
+			return true;
+		}
+	}
+	return false;
+}
 void add(L * head,string i,string bn,string au)//添加书籍
 {
+	if(!find(head,i,bn,au))//本地书库不存在 则添加新书籍
+	{
 	L * p=new L;
 	p->author = au;
 	p->book_name = bn;
 	p->id = i;
+	p->count = 1;
 	p->next = NULL;
 	if (head->next == NULL)
 	{
@@ -69,6 +98,8 @@ void add(L * head,string i,string bn,string au)//添加书籍
 		pre->next = p;
 	}
 	cout << "已添加书籍" << endl;
+	}
+
 }
 
 
@@ -85,7 +116,7 @@ void print(L * head)//输出书库目录
 	{
 		for (p = head->next; p != NULL; p = p->next)
 		{
-			cout <<"	书籍编号："<< p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
+			cout <<"	书籍编号："<< p->id << " 书名：《" << p->book_name << "》 作者：" << p->author<<" 可借数："<<p->count<< endl;
 		}
 	}
 	cout << endl;
@@ -102,7 +133,7 @@ int find_b(L * head,string kinds,string k)//查找书籍
 			if (p->id == kinds)
 			{
 			flag = 1;
-			cout << "	书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
+			cout << "	书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << " 可借数：" << p->count << endl;
 			}
 		}
 		
@@ -111,7 +142,7 @@ int find_b(L * head,string kinds,string k)//查找书籍
 			if (p->book_name == kinds)
 			{
 				flag = 1;
-				cout << "	书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
+				cout << "	书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << " 可借数：" << p->count << endl;
 			}
 		}
 		if (k == "au")
@@ -119,7 +150,7 @@ int find_b(L * head,string kinds,string k)//查找书籍
 			if (p->author == kinds)
 			{
 				flag = 1;
-				cout << "	书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author << endl;
+				cout << "	书籍编号：" << p->id << " 书名：《" << p->book_name << "》 作者：" << p->author <<" 可借数："<<p->count<< endl;
 			}
 		}
 	}
@@ -130,10 +161,8 @@ int find_b(L * head,string kinds,string k)//查找书籍
 void find_menu(L * head,string fk)//查找方式菜单
 {
 	
-	//string fk;
 	string kinds;
 	int flag = 0;
-	//cin >> fk;
 	if (head->next == NULL)
 	{
 		cout << "书库为空" << endl;
@@ -233,12 +262,6 @@ int main()
 			}
 		}
 		else if (type == 0) break;
-		/*else
-		{
-			cout << "输入格式不对，请重新输入：" << endl;
-			cin >> type;
-			continue;
-		}*/
 	}
 	end();
 	save(head);

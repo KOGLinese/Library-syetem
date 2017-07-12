@@ -1,3 +1,4 @@
 ﻿  源.cpp
+e:\library\图书管理\图书管理\源.cpp(20): warning C4101: “num”: 未引用的局部变量
   图书管理.vcxproj -> E:\Library\图书管理\Debug\图书管理.exe
   图书管理.vcxproj -> E:\Library\图书管理\Debug\图书管理.pdb (Partial PDB)
