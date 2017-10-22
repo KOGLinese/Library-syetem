@@ -25,9 +25,9 @@ void init(L * head)  // 初始化链表
 		p = new L;
 		getline(infile, s, '\n');
 		p->id = s;
-		infile>>p->count ;
-		getline(infile, s, '\n');
-		getline(infile, s, '\n');
+		infile>>p->count ;       //读取数值
+		getline(infile, s, '\n');//读取位置下移
+		getline(infile, s, '\n');//读取下一行
 		p->book_name = s;
 		getline(infile, s, '\n');
 		p->author = s;
@@ -36,6 +36,7 @@ void init(L * head)  // 初始化链表
 		pre = pre->next;
 	}
 }
+
 void save(L *head)  //数据存入本地文件
 {
 	L * p = head;
@@ -46,7 +47,7 @@ void save(L *head)  //数据存入本地文件
 		if (p->id != "")
 		{
 		outfile << p->id << endl;
-		outfile << p->count << endl;
+		outfile << p->count << endl;    //存 数量
 		outfile << p->book_name << endl;
 		outfile << p->author;
 
@@ -101,7 +102,19 @@ void add(L * head,string i,string bn,string au)//添加书籍
 	}
 
 }
-
+void borrow(L * head, string i)
+{
+	L * p = new L;
+	if (head->next == NULL) { cout << "没有该编号书籍" << endl; return; }
+	else for (p = head->next; p != NULL; p = p->next)
+	{
+		if (p->id == i&&p->count != 0) {
+			p->count--; cout <<" 《"<<p->book_name<< "》 借书成功" << endl; return;
+		}
+		else if (p->id == i&&p->count == 0) { cout << "该书籍库存为零" << endl; return; }
+	}
+	cout << "没有该编号书籍" << endl; return;
+}
 
 void print(L * head)//输出书库目录
 {
@@ -196,7 +209,8 @@ void menu()
 	cout << "||      1.输入1 进入添加书籍功能     ||" << endl;
 	cout << "||      2.输入2 进入查看书库模式     ||" << endl;
 	cout << "||      3.输入3 进入查找书籍模式     ||" << endl;
-	cout << "||      4.输入0 退出该系统           ||" << endl;
+	cout << "||      4.输入4 进入借阅书籍模式     ||" << endl;
+	cout << "||      5.输入0 退出该系统           ||" << endl;
 	cout << "||      其他功能，敬请期待0.0        ||" << endl;
 	cout << "||                                   ||" << endl;
 	cout << "=======================================" << endl;
@@ -219,7 +233,7 @@ int main()
 	menu();
 	while (1)
 	{
-		cout << "输入    1:添加书籍, 2:查看目录, ,3:查找书籍, 0:退出程序" << endl;
+		cout << "输入    1:添加书籍, 2:查看目录 ,3:查找书籍, 4:借阅书籍，0:退出程序" << endl;
 		cin >> type;
 		if (type == 1)
 		{
@@ -261,10 +275,16 @@ int main()
 				find_menu(head, fk);
 			}
 		}
+		else if (type == 4)
+		{
+			cout << "请输入书籍编号借阅书籍：" << endl;
+			string i;
+			cin >> i;
+			borrow(head, i);
+		}
 		else if (type == 0) break;
 	}
 	end();
 	save(head);
-	system("pause");
 	return 0;
 }
